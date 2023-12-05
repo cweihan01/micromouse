@@ -20,21 +20,30 @@ uint8_t complete = 0;
  */
 uint16_t readIR(IR ir)
 {
+	GPIO_TypeDef* gpio;
+	uint16_t pin;
+
 	if(ir == IR_LEFT) {
-//		HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PIN_SET);
+		gpio = LeftEmitter_GPIO_Port;
+		pin = LeftEmitter_Pin;
 	}
-	else if(ir == IR_RIGHT) {}
-	else if(ir == IR_FRONT_LEFT) {}
-	else if(ir == IR_FRONT_RIGHT) {}
+	else if(ir == IR_RIGHT) {
+		gpio = RightEmitter_GPIO_Port;
+		pin = RightEmitter_Pin;
+	}
+	else if(ir == IR_FRONT_LEFT) {
+		gpio = FrontLeftEmitter_GPIO_Port;
+		pin = FrontLeftEmitter_Pin;
+	}
+	else if(ir == IR_FRONT_RIGHT) {
+		gpio = FrontRightEmitter_GPIO_Port;
+		pin = FrontRightEmitter_Pin;
+	}
+
+	HAL_GPIO_WritePin(gpio, pin, GPIO_PIN_SET);
 	delayMicroseconds(25);
 	uint16_t retVal = analogRead(ir);
-	if(ir == IR_LEFT) {
-//		HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PIN_SET);
-	}
-	else if(ir == IR_RIGHT) {}
-	else if(ir == IR_FRONT_LEFT) {}
-	else if(ir == IR_FRONT_RIGHT) {}
-
+	HAL_GPIO_WritePin(gpio, pin, GPIO_PIN_RESET);
 	return retVal;
 }
 
@@ -44,23 +53,23 @@ uint16_t readIR(IR ir)
  */
 uint16_t readLeftIR(void)
 {
-	readIR(IR_LEFT);
+	return readIR(IR_LEFT);
 }
 
 uint16_t readFrontLeftIR(void)
 {
-	readIR(IR_FRONT_LEFT);
+	return readIR(IR_FRONT_LEFT);
 }
 
 uint16_t readFrontRightIR(void)
 {
-	readIR(IR_FRONT_RIGHT);
+	return readIR(IR_FRONT_RIGHT);
 }
 
 
 uint16_t readRightIR(void)
 {
-	readIR(IR_RIGHT);
+	return readIR(IR_RIGHT);
 }
 
 /*

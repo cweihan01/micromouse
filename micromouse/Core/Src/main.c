@@ -105,6 +105,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+
   MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
@@ -125,6 +126,12 @@ int main(void)
   // Set motors
 //  setMotorLPWM(0.5);
 //  setMotorRPWM(-0.3);
+//  HAL_Delay(2000);
+
+//   Wait until button is pressed
+    while (HAL_GPIO_ReadPin(Button_GPIO_Port, Button_Pin) == GPIO_PIN_SET);
+    HAL_Delay(200);
+
   turn(1);
   HAL_Delay(500);
   turn(2);
@@ -133,7 +140,7 @@ int main(void)
   HAL_Delay(500);
   turn(4);
   HAL_Delay(500);
-  move(4);
+  move(1);
 
   /* USER CODE END 2 */
 
@@ -143,6 +150,13 @@ int main(void)
   {
 	 left_counts = getLeftEncoderCounts();
 	 right_counts = getRightEncoderCounts();
+
+	 if(readFrontLeftIR() + readFrontRightIR() < 4000)
+		 move(1);
+	 else if(readRightIR() < 2000)
+		 turn(1);
+	 else
+		 turn(-1);
 
     /* USER CODE END WHILE */
 
